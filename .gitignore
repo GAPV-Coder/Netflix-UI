@@ -24,4 +24,4 @@ yarn-error.log*
 
 .prettierrc
 .env
-Constants.js
+/utils/Constants.js

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import Navbar from "../../components/Navbar/Navbar";
+import Slider from "../../components/Slider/Slider";
 import backgroundImage from "../../assets/home.jpg";
 import MovieLogo from "../../assets/homeTitle.webp";
 import { getGenres, fetchMovies } from "../../redux/Store";
@@ -60,6 +61,7 @@ const Netflix = () => {
 					</div>
 				</div>
 			</div>
+			<Slider movies={movies} />
 		</Container>
 	);
 };
