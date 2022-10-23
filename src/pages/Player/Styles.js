@@ -11,6 +11,7 @@ export const Container = styled.div`
 			svg {
 				font-size: 3rem;
 				cursor: pointer;
+				color: white;
 			}
 		}
 		video {
