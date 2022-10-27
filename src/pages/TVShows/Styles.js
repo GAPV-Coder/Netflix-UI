@@ -6,8 +6,8 @@ export const Container = styled.div`
 		margin-top: 6.5rem;
 		.not-available {
 			text-align: center;
-			color: white;
 			margin-top: 4rem;
+			color: white;
 		}
 	}
 `;

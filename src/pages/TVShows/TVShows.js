@@ -2,34 +2,34 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
-import { fetchMovies, getGenres } from "../../redux/Store";
 import { firebaseAuth } from "../../utils/Config-firebase";
+import { fetchMovies, getGenres } from "../../redux/Store";
 import Navbar from "../../components/Navbar/Navbar";
-import Slider from "../../components/Slider/Slider";
-import NotAvailable from "../../components/NotAvailable/NotAvailable";
 import SelectGenre from "../../components/SelectGenre/SelectGenre";
+import Slider from "../../components/Slider/Slider";
 import { Container } from "./Styles";
 
-const Movies = () => {
+const TVShows = () => {
 	const [isScrolled, setIsScrolled] = useState(true);
-	const [user, setUser] = useState(undefined);
-
 	const movies = useSelector(state => state.netflix.movies);
 	const genres = useSelector(state => state.netflix.genres);
 	const genresLoaded = useSelector(state => state.netflix.genresLoaded);
+	const dataLoading = useSelector(state => state.netflix.dataLoading);
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getGenres());
+		if (!genres.length) dispatch(getGenres());
 	}, []);
 
 	useEffect(() => {
 		if (genresLoaded) {
-			dispatch(fetchMovies({ genres, type: "movie" }));
+			dispatch(fetchMovies({ genres, type: "tv" }));
 		}
 	}, [genresLoaded]);
+
+	const [user, setUser] = useState(undefined);
 
 	onAuthStateChanged(firebaseAuth, currentUser => {
 		if (currentUser) setUser(currentUser.uid);
@@ -37,21 +37,28 @@ const Movies = () => {
 	});
 
 	window.onscroll = () => {
-		setIsScrolled(window.pageYOffset === 1 ? true : true);
+		setIsScrolled(window.scrollY === 1 ? true : true);
 		return () => (window.onscroll = null);
 	};
 
 	return (
 		<Container>
-			<div className="navbar">
-				<Navbar isScrolled={isScrolled} />
-			</div>
+			<Navbar isScrolled={isScrolled} />
 			<div className="data">
-				<SelectGenre genres={genres} type="movie" />
-				{movies.length ? <Slider movies={movies} /> : <NotAvailable />}
+				<SelectGenre genres={genres} type="tv" />
+				{movies.length ? (
+					<>
+						<Slider movies={movies} />
+					</>
+				) : (
+					<h1 className="not-available">
+						No TV Shows avaialble for the selected genre. Please select a
+						different genre.
+					</h1>
+				)}
 			</div>
 		</Container>
 	);
 };
 
-export default Movies;
+export default TVShows;
