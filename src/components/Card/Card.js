@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
@@ -9,6 +10,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import axios from "axios";
 import { firebaseAuth } from "../../utils/Config-firebase";
 import video from "../../assets/video.mp4";
+import { removeMovieFromLiked } from "../../redux/Store";
 import { Container } from "./Styles";
 
 export default React.memo(function Card({ index, movieData, isLiked = false }) {
@@ -16,6 +18,7 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
 	const [email, setEmail] = useState(undefined);
 
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	onAuthStateChanged(firebaseAuth, currentUser => {
 		if (currentUser) {
@@ -74,7 +77,14 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
 								<RiThumbUpFill title="Like" />
 								<RiThumbDownFill title="Dislike" />
 								{isLiked ? (
-									<BsCheck title="Remove from List" />
+									<BsCheck
+										title="Remove from List"
+										onClick={() =>
+											dispatch(
+												removeMovieFromLiked({ movieId: movieData.id, email })
+											)
+										}
+									/>
 								) : (
 									<AiOutlinePlus title="Add to my list" onClick={addToList} />
 								)}
